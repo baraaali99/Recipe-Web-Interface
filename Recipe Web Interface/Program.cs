@@ -1,7 +1,21 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Net.Http.Headers;
+using System.Net.Http.Headers;
 
+
+var builder = WebApplication.CreateBuilder(args);
+IConfiguration config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
+    .Build();
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+builder.Services.AddHttpClient("category", httpClient =>
+{
+    var url = config.GetRequiredSection("BaseUrl").Get<string>();
+    httpClient.BaseAddress = new Uri(url);
+});
 
 var app = builder.Build();
 

@@ -4,9 +4,9 @@ using RecipeWebInterfaceApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddRazorPages();
+builder.Services.AddHttpClient();
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -22,6 +22,9 @@ var recipesList = new List<Recipe>();
 var categoriesList = new List<string>();
 var jsonPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 string jsonFile = Path.Combine(jsonPath, "RecipesInfo.json");
+
+var jsonPathCategory = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+string jsonFileCategory = Path.Combine(jsonPath, "CategoriesInfo.json");
 
 using (StreamReader r = new StreamReader(jsonFile))
 {
@@ -73,9 +76,10 @@ app.MapGet("/category", () =>
 	return Results.Ok(categoriesList);
 });
 
-app.MapPost("/category", (string category) =>
+
+app.MapPost("/category", ([FromBody] Category category) =>
 {
-	categoriesList.Add(category);
+	categoriesList.Add(category.CategoryName);
 	Save();
 	return Results.Created($"/recipes/{category}", category);
 });
@@ -120,5 +124,6 @@ app.MapPut("/category", (string oldCategory, string editCategory) =>
 void Save()
 {
 	File.WriteAllText(jsonFile, JsonConvert.SerializeObject(recipesList));
+	File.WriteAllText(jsonFileCategory, JsonConvert.SerializeObject(categoriesList));
 }
 app.Run(); // Now we're done and the API is ready to run
