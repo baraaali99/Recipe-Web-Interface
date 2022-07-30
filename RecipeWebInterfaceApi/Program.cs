@@ -21,7 +21,7 @@ if (app.Environment.IsDevelopment())
 var recipesList = new List<Recipe>();
 var categoriesList = new List<string>();
 var jsonPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-string jsonFile = Path.Combine(jsonPath, "RecipesInfo.json");
+string jsonFile = Path.Combine(jsonPath, "Data.json");
 
 var jsonPathCategory = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 string jsonFileCategory = Path.Combine(jsonPath, "CategoriesInfo.json");

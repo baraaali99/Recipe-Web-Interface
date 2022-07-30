@@ -11,7 +11,7 @@ IConfiguration config = new ConfigurationBuilder()
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddHttpClient("category", httpClient =>
+builder.Services.AddHttpClient("Api", httpClient =>
 {
     var url = config.GetRequiredSection("BaseUrl").Get<string>();
     httpClient.BaseAddress = new Uri(url);

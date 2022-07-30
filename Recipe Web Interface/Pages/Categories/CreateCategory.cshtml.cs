@@ -23,11 +23,12 @@ namespace Recipe_Web_Interface.Pages
 				return Page();
 			try
 			{
-				var httpClient = _httpClientFactory.CreateClient("category");
+				var httpClient = _httpClientFactory.CreateClient("Api");
 				string baseAddress = httpClient.BaseAddress.ToString();
 				var response = await httpClient.PostAsJsonAsync($"{baseAddress}category",new Category {CategoryName = Category} ,new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 				response.EnsureSuccessStatusCode();
 				ActionResult = "Created successfully";
+				
 			}
 			catch (Exception)
 			{
