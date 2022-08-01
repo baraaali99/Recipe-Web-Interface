@@ -13,26 +13,36 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
 	app.UseSwagger();
 	app.UseSwaggerUI();
-}
+
 var recipesList = new List<Recipe>();
 var categoriesList = new List<string>();
 var jsonPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-string jsonFile = Path.Combine(jsonPath, "Data.json");
+string jsonFile = Path.Combine(Environment.CurrentDirectory, "Data.json");
+
 
 var jsonPathCategory = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-string jsonFileCategory = Path.Combine(jsonPath, "CategoriesInfo.json");
+string jsonFileCategory = Path.Combine(Environment.CurrentDirectory, "CategoriesInfo.json");
 
 using (StreamReader r = new StreamReader(jsonFile))
 {
-	var Data = r.ReadToEnd();
-	var Json = JsonConvert.DeserializeObject<List<Recipe>>(Data);
+    var Data = r.ReadToEnd();
+    var Json = JsonConvert.DeserializeObject<List<Recipe>>(Data);
+    if (Json != null)
+    {
+        recipesList = Json;
+    }
+}
+
+
+using (StreamReader C = new StreamReader(jsonFileCategory))
+{
+	var Data = C.ReadToEnd();
+	var Json = JsonConvert.DeserializeObject<List<string>>(Data);
 	if (Json != null)
 	{
-		recipesList = Json;
+		categoriesList = Json;
 	}
 }
 
