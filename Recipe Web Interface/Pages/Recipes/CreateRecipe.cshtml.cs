@@ -6,24 +6,25 @@ namespace Recipe_Web_Interface.Pages
 {
 
 
-    public class CreateModel : PageModel
+    public class CreateRecipeModel : PageModel
     {
 
 		[TempData]
 		public string? ActionResult { get; set; }
-		[BindProperty]
-		[Required]
+        [BindProperty,Required]
+		public string Title { get; set; }
+		[BindProperty,Required]
 		public Recipe recipe { get; set; } = new();
 		public IEnumerable<string> Categories { get; set; } = Enumerable.Empty<string>();
 		[BindProperty]
-		public IEnumerable<string>? SelectedCategories { get; set; } = Enumerable.Empty<string>();
+		public IEnumerable<string> SelectedCategories { get; set; } = Enumerable.Empty<string>();
 		[BindProperty]
 		public string? Ingredients { get; set; } = string.Empty;
 		[BindProperty]
 		public string? Instructions { get; set; } = string.Empty;
 
 		private readonly IHttpClientFactory _httpClientFactory;
-		public CreateModel(IHttpClientFactory httpClientFactory) =>
+		public CreateRecipeModel(IHttpClientFactory httpClientFactory) =>
 				_httpClientFactory = httpClientFactory;
 		public async Task<IActionResult> OnGetAsync()
 		{
@@ -31,7 +32,7 @@ namespace Recipe_Web_Interface.Pages
 			{
 				var httpClient = _httpClientFactory.CreateClient("Api");
 				string baseAddress = httpClient.BaseAddress.ToString();
-				var response = await httpClient.GetFromJsonAsync<IEnumerable<string>>($"{baseAddress}category");
+				var response = await httpClient.GetFromJsonAsync<IEnumerable<string>>($"{baseAddress}category" , default);
 				if (response != null)
 					Categories = response;
 				return Page();
@@ -39,7 +40,7 @@ namespace Recipe_Web_Interface.Pages
 			catch (Exception)
 			{
 				ActionResult = "Something went wrong, please try again";
-				return RedirectToPage("./Index");
+				return RedirectToPage("/Index");
 			}
 		}
 
@@ -49,26 +50,33 @@ namespace Recipe_Web_Interface.Pages
 			try
 			{
 				string baseAddress = httpClient.BaseAddress.ToString();
-				var response = await httpClient.GetFromJsonAsync<IEnumerable<string>>($"{baseAddress}category");
+				var response = await httpClient.GetFromJsonAsync<IEnumerable<string>>($"{baseAddress}category" , default);
 				if (response != null)
 					SelectedCategories = response;
 			}
 			catch (Exception)
 			{
 				ActionResult = "Something went wrong, please try again";
-				return RedirectToPage("./Index");
+				return RedirectToPage("/Index");
 			}
 
 			if (!ModelState.IsValid)
 				return Page();
 
+			if(Title != null)
+				recipe.Title = Title;
 			recipe.Id = Guid.Empty;
-			if (SelectedCategories != null)
-				recipe.Categories = (List<string>)SelectedCategories;
+
 			if (Ingredients != null)
 				recipe.Ingredients = Ingredients.Split(Environment.NewLine).ToList();
+
 			if (Instructions != null)
 				recipe.Instructions = Instructions.Split(Environment.NewLine).ToList();
+
+			if (SelectedCategories != null)
+				recipe.Categories = (List<string>)SelectedCategories;
+
+		
 
 
 			try
@@ -80,7 +88,8 @@ namespace Recipe_Web_Interface.Pages
 						  Title = recipe.Title,
 						  Ingredients = recipe.Ingredients, 
 						  Instructions = recipe.Instructions, 
-						  Categories = recipe.Categories }
+						  Categories = recipe.Categories
+					  }
 					 , new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 				response.EnsureSuccessStatusCode();
 				ActionResult = "Created successfully";
@@ -89,7 +98,7 @@ namespace Recipe_Web_Interface.Pages
 			{
 				ActionResult = "Something went wrong, please try again";
 			}
-			return RedirectToPage("./Index");
+			return RedirectToPage("./ListRecipes");
 		}
 	}
 }

@@ -2,21 +2,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using Recipe_Web_Interface.Model;
+using System.Net.Http.Json;
+
 namespace Recipe_Web_Interface.Pages.Categories
 {
-    public class CreateCategoryModel : PageModel
+    public class EditCategoryModel : PageModel
     {
+
 		[TempData]
 		public string? ActionResult { get; set; }
+		[FromRoute(Name = "category")]
+		[Display(Name = "Old Category Name")]
+		public string OldCategory { get; set; } = string.Empty;
 		[BindProperty]
 		[Required]
-		[Display(Name = "NewCategory Name")]
-		public string Category { get; set; } = String.Empty;
+		[Display(Name = "New Category Name")]
+		public string NewCategory { get; set; } = string.Empty;
 		private readonly IHttpClientFactory _httpClientFactory;
 
-		public CreateCategoryModel(IHttpClientFactory httpClientFactory) =>
+		public EditCategoryModel(IHttpClientFactory httpClientFactory) =>
 				_httpClientFactory = httpClientFactory;
 
+		public void OnGet()
+		{
+		}
 		public async Task<IActionResult> OnPostAsync()
 		{
 			if (!ModelState.IsValid)
@@ -24,11 +33,9 @@ namespace Recipe_Web_Interface.Pages.Categories
 			try
 			{
 				var httpClient = _httpClientFactory.CreateClient("Api");
-				string baseAddress = httpClient.BaseAddress.ToString();
-				var response = await httpClient.PostAsJsonAsync($"{baseAddress}category",new Category {CategoryName = Category} ,new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+				var response = await httpClient.PutAsync($"category?oldCategory={OldCategory}&editedCategory={NewCategory}", null);
 				response.EnsureSuccessStatusCode();
-				ActionResult = "Created successfully";
-				
+				ActionResult = "Edited successfully";
 			}
 			catch (Exception)
 			{

@@ -102,18 +102,18 @@ app.MapDelete("/category", (string category) =>
 	return Results.NotFound();
 });
 
-app.MapPut("/category", (string oldCategory, string editCategory) =>
+app.MapPut("/category", (string oldCategory, string editedCategory) =>
 {
 	for (int i = 0; i < categoriesList.Count; ++i)
 	{
 		if (categoriesList[i] == oldCategory)
 		{
 			categoriesList.Remove(oldCategory);
-			categoriesList.Add(editCategory);
+			categoriesList.Add(editedCategory);
 			foreach (var r in recipesList)
 			{
 				r.Categories.Remove(oldCategory);
-				r.Categories.Add(editCategory);
+				r.Categories.Add(editedCategory);
 			}
 			Save();
 			return Results.NoContent();
