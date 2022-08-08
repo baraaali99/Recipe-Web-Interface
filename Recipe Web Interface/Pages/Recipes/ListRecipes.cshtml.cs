@@ -20,7 +20,7 @@ namespace Recipe_Web_Interface.Pages.Recipes
 				HttpClient httpClient = _httpClientFactory.CreateClient("Api");
 				string baseAddress = httpClient.BaseAddress.ToString();
 				var response = await httpClient.GetFromJsonAsync<List<Recipe>>($"{baseAddress}recipes", default);
-				if (response == null)
+				if (response != null)
 					RecipeList = response;
 				return Page();
 			}

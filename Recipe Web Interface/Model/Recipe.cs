@@ -6,7 +6,7 @@ namespace Recipe_Web_Interface.Models
     public class Recipe
     {
        
-		public Guid Id { get; set; } = Guid.Empty;
+		public Guid Id { get; set; } = new Guid();
 		[Required]
 		public string Title { get; set; }
 		public List<string> Ingredients { get; set; } = new();

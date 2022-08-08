@@ -76,12 +76,12 @@
 					</div>
 					<div class="text-center mt-3">
 						<div class="btn-group">
-							<a class="btn btn-primary" asp-page="./Edit" asp-route-recipeTitle="@recipe.Id">
-								<i class="bi bi-pencil-square"></i>
-							</a>
-							<a class="btn btn-danger" asp-page="./Delete" asp-route-recipeTitle="@recipe.Id">
-								<i class="bi bi-trash"></i>
-							</a>
+							<a class="btn btn-primary" asp-page="./Edit" asp-route-recipe="@recipe.Id">
+							<i class="bi bi-pencil-square"></i>
+						</a>
+						<a class="btn btn-danger" asp-page="./Delete" asp-route-recipe="@recipe.Id">
+							<i class="bi bi-trash"></i>
+						</a>
 						</div>
 					</div>
 

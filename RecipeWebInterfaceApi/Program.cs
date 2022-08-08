@@ -16,6 +16,12 @@ var app = builder.Build();
 	app.UseSwagger();
 	app.UseSwaggerUI();
 
+	app.UseSwaggerUI(options =>
+	{
+		options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+		options.RoutePrefix = string.Empty;
+	});
+
 var recipesList = new List<Recipe>();
 var categoriesList = new List<string>();
 var jsonPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
@@ -51,6 +57,15 @@ app.MapGet("/recipes", () =>
 	return Results.Ok(recipesList);
 });
 
+app.MapGet("/recipes/{id}", (Guid id) =>
+{
+	if (recipesList.Find(recipe => recipe.Id == id) is Recipe recipe)
+	{
+		return Results.Ok(recipe);
+	}
+	return Results.NotFound();
+});
+
 app.MapPost("/recipes", ([FromBody] Recipe recipe) =>
 {
 	recipesList.Add(recipe);
@@ -69,7 +84,7 @@ app.MapDelete("/recipes", (Guid id) =>
 	return Results.NotFound(); //404 not found
 });
 
-app.MapPut("/recipes", (Recipe editedRecipe) =>
+app.MapPut("/recipes", ([FromBody]Recipe editedRecipe) =>
 {
 	if (recipesList.Find(recipe => recipe.Id == editedRecipe.Id) is Recipe recipe)
 	{

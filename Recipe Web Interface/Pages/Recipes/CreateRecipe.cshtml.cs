@@ -52,7 +52,7 @@ namespace Recipe_Web_Interface.Pages
 				string baseAddress = httpClient.BaseAddress.ToString();
 				var response = await httpClient.GetFromJsonAsync<IEnumerable<string>>($"{baseAddress}category" , default);
 				if (response != null)
-					SelectedCategories = response;
+					Categories = response;
 			}
 			catch (Exception)
 			{
@@ -65,7 +65,7 @@ namespace Recipe_Web_Interface.Pages
 
 			if(Title != null)
 				recipe.Title = Title;
-			recipe.Id = Guid.Empty;
+			recipe.Id = Guid.NewGuid();
 
 			if (Ingredients != null)
 				recipe.Ingredients = Ingredients.Split(Environment.NewLine).ToList();
@@ -73,22 +73,18 @@ namespace Recipe_Web_Interface.Pages
 			if (Instructions != null)
 				recipe.Instructions = Instructions.Split(Environment.NewLine).ToList();
 
-			if (SelectedCategories != null)
-				recipe.Categories = (List<string>)SelectedCategories;
-
-		
-
-
 			try
 			{
+					recipe.Categories = (List<string>)SelectedCategories;
 				string baseAddress = httpClient.BaseAddress.ToString();
 				var response = await httpClient.PostAsJsonAsync($"{baseAddress}recipes",
-					  new Recipe {
-						  Id = recipe.Id, 
+					  new Recipe
+					  {
+						  Id = recipe.Id,
 						  Title = recipe.Title,
-						  Ingredients = recipe.Ingredients, 
-						  Instructions = recipe.Instructions, 
-						  Categories = recipe.Categories
+						  Ingredients = recipe.Ingredients,
+						  Instructions = recipe.Instructions,
+						  Categories = (List<string>)SelectedCategories
 					  }
 					 , new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 				response.EnsureSuccessStatusCode();
