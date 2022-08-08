@@ -13,7 +13,7 @@ namespace Recipe_Web_Interface.Pages.Recipes
 		public Recipe Recipe { get; set; } = new();
 		public IEnumerable<string> Categories { get; set; } = Enumerable.Empty<string>();
 		[BindProperty]
-		public IEnumerable<string> ChosenCategories { get; set; } = Enumerable.Empty<string>();
+		public IEnumerable<string> SelectedCategories { get; set; } = Enumerable.Empty<string>();
 		[BindProperty]
 		public string Ingredients { get; set; } = string.Empty;
 		[BindProperty]
@@ -22,57 +22,50 @@ namespace Recipe_Web_Interface.Pages.Recipes
 
 		public EditModel(IHttpClientFactory httpClientFactory) =>
 				_httpClientFactory = httpClientFactory;
+
 		public async Task<IActionResult> OnGetAsync(Guid recipeId)
 		{
-			await PopulateRecipeAndCategoriesAsync(recipeId);
-			if (Recipe == null)
+			var httpClient = _httpClientFactory.CreateClient("Api");
+			string baseAddress = httpClient.BaseAddress.ToString();
+			var categoriesResponse = await httpClient.GetFromJsonAsync<IEnumerable<string>>($"{baseAddress}category");
+			if (categoriesResponse != null)
+				Categories = categoriesResponse;
+			var recipeResponse = await httpClient.GetFromJsonAsync<Recipe>($"{baseAddress}recipes/{recipeId}");
+			if (recipeResponse != null)
+				Recipe = recipeResponse; if (Recipe == null)
 				return NotFound();
+
 			Ingredients = String.Join(Environment.NewLine, Recipe.Ingredients);
 			Instructions = String.Join(Environment.NewLine, Recipe.Instructions);
 			return Page();
 		}
-
 		public async Task<IActionResult> OnPostAsync(Guid recipeId)
 		{
-			if (!ModelState.IsValid)
-			{
-				await PopulateRecipeAndCategoriesAsync(recipeId);
-				return Page();
-			}
-
 			Recipe.Id = recipeId;
-			if (ChosenCategories != null)
-				Recipe.Categories = (List<string>)ChosenCategories;
+			if (SelectedCategories != null)
+				Recipe.Categories = (List<string>)SelectedCategories;
 			if (Ingredients != null)
 				Recipe.Ingredients = Ingredients.Split(Environment.NewLine).ToList();
 			if (Instructions != null)
 				Recipe.Instructions = Instructions.Split(Environment.NewLine).ToList();
-
-			var httpClient = _httpClientFactory.CreateClient("Api");
 			try
 			{
-				var response = await httpClient.PutAsJsonAsync($"recipes/{Recipe.Id}", Recipe);
+				var httpClient = _httpClientFactory.CreateClient("Api");
+				var response = await httpClient.PutAsJsonAsync($"{httpClient.BaseAddress.ToString()}recipes/{recipeId}", new Recipe {
+					Id = Recipe.Id , 
+					Categories = Recipe.Categories , 
+					Ingredients = Recipe.Ingredients , 
+					Instructions = Recipe.Instructions,
+					Title = Recipe.Title
+				});
 				response.EnsureSuccessStatusCode();
-				ActionResult = "Successfully Edited";
+				ActionResult = "Created successfully";
 			}
 			catch (Exception)
 			{
-				ActionResult = "Something went wrong please try again later";
+				ActionResult = "Something went wrong, Try again later";
 			}
-			return RedirectToPage("./Index");
+			return RedirectToPage("/Index");
 		}
-
-		public async Task PopulateRecipeAndCategoriesAsync(Guid recipeId)
-		{
-			var httpClient = _httpClientFactory.CreateClient("Api");
-			var categoriesResponse = await httpClient.GetFromJsonAsync<IEnumerable<string>>($"{httpClient.BaseAddress.ToString()}category");
-			if (categoriesResponse != null)
-				Categories = categoriesResponse;
-			var recipeResponse = await httpClient.GetFromJsonAsync<Recipe>($"recipes?id = {recipeId}");
-			if (recipeResponse != null)
-				Recipe = recipeResponse;
-		}
-
 	}
 }
-

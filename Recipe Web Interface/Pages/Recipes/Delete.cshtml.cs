@@ -15,13 +15,12 @@ namespace Recipe_Web_Interface.Pages.Recipes
 		public DeleteModel(IHttpClientFactory httpClientFactory) =>
 				_httpClientFactory = httpClientFactory;
 
-		public void OnGet()
+		public async Task<IActionResult> OnGet()
 		{
-			/*try
+			try
 			{
 				var httpClient = _httpClientFactory.CreateClient("Api");
-				string baseAddress = httpClient.BaseAddress.ToString();
-				var response = await httpClient.GetFromJsonAsync<Recipe>($"{baseAddress}recipes");
+				var response = await httpClient.GetFromJsonAsync<Recipe>($"{httpClient.BaseAddress.ToString()}recipes/{RecipeId}");
 				if (response == null)
 					return NotFound();
 				Recipe = response;
@@ -29,9 +28,9 @@ namespace Recipe_Web_Interface.Pages.Recipes
 			}
 			catch (Exception)
 			{
-				ActionResult = "Something went wrong, please try again";
-				return RedirectToPage("./ListRecipes");
-			}*/
+				ActionResult = "Something went wrong please try again later";
+				return RedirectToPage("/Index");
+			}
 		}
 
 		public async Task<IActionResult> OnPostAsync()
@@ -39,16 +38,18 @@ namespace Recipe_Web_Interface.Pages.Recipes
 			try
 			{
 				var httpClient = _httpClientFactory.CreateClient("Api");
-				string baseAddress = httpClient.BaseAddress.ToString();
-				var response = await httpClient.DeleteAsync("recipes?id=" + RecipeId);
+				var response = await httpClient.DeleteAsync($"recipes/{RecipeId}");
 				response.EnsureSuccessStatusCode();
 				ActionResult = "Successfully Deleted";
 			}
 			catch (Exception)
 			{
-				ActionResult = "Something went wrong, please try again";
+				ActionResult = "Something went wrong please try again later";
 			}
-			return RedirectToPage("./ListRecipes");
+			return RedirectToPage("/Index");
 		}
+		
 	}
 }
+
+

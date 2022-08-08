@@ -57,12 +57,15 @@ app.MapGet("/recipes", () =>
 	return Results.Ok(recipesList);
 });
 
-app.MapGet("/recipes/{id}", (Guid id) =>
+app.MapGet("/recipes/{id}", ([FromRoute(Name ="id")]Guid id) =>
 {
-	if (recipesList.Find(recipe => recipe.Id == id) is Recipe recipe)
-	{
-		return Results.Ok(recipe);
-	}
+    for(int i = 0; i < recipesList.Count(); ++i)
+    {
+        if (recipesList[i].Id == id)
+        {
+			return Results.Ok(recipesList[i]);
+        }
+    }
 	return Results.NotFound();
 });
 
@@ -84,12 +87,13 @@ app.MapDelete("/recipes", (Guid id) =>
 	return Results.NotFound(); //404 not found
 });
 
-app.MapPut("/recipes", ([FromBody]Recipe editedRecipe) =>
+app.MapPut("/recipes/{id}", ([FromBody]Recipe editedRecipe) =>
 {
 	if (recipesList.Find(recipe => recipe.Id == editedRecipe.Id) is Recipe recipe)
 	{
 		recipesList.Remove(recipe);
 		recipesList.Add(editedRecipe);
+		recipesList = recipesList.OrderBy(o => o.Title).ToList();
 		Save();
 		return Results.NoContent();
 	}
