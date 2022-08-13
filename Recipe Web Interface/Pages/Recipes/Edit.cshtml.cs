@@ -41,6 +41,20 @@ namespace Recipe_Web_Interface.Pages.Recipes
 		}
 		public async Task<IActionResult> OnPostAsync(Guid recipeId)
 		{
+			var httpClient = _httpClientFactory.CreateClient("Api");
+			try
+			{
+				string baseAddress = httpClient.BaseAddress.ToString();
+				var response = await httpClient.GetFromJsonAsync<IEnumerable<string>>($"{baseAddress}category", default);
+				if (response != null)
+					Categories = response;
+			}
+			catch (Exception)
+			{
+				ActionResult = "Something went wrong, please try again";
+				return RedirectToPage("/Index");
+			}
+
 			Recipe.Id = recipeId;
 			if (SelectedCategories != null)
 				Recipe.Categories = (List<string>)SelectedCategories;
@@ -48,24 +62,25 @@ namespace Recipe_Web_Interface.Pages.Recipes
 				Recipe.Ingredients = Ingredients.Split(Environment.NewLine).ToList();
 			if (Instructions != null)
 				Recipe.Instructions = Instructions.Split(Environment.NewLine).ToList();
+
 			try
 			{
-				var httpClient = _httpClientFactory.CreateClient("Api");
-				var response = await httpClient.PutAsJsonAsync($"{httpClient.BaseAddress.ToString()}recipes/{recipeId}", new Recipe {
-					Id = Recipe.Id , 
+				var response = await httpClient.PutAsJsonAsync($"recipes/{recipeId}", new Recipe {
 					Categories = Recipe.Categories , 
+					Id = Recipe.Id , 
 					Ingredients = Recipe.Ingredients , 
-					Instructions = Recipe.Instructions,
-					Title = Recipe.Title
-				});
+					Instructions  = Recipe.Instructions , 
+					Title = Recipe.Title}
+				);
 				response.EnsureSuccessStatusCode();
-				ActionResult = "Created successfully";
+				ActionResult = "Successfully Edited";
 			}
 			catch (Exception)
 			{
-				ActionResult = "Something went wrong, Try again later";
+				ActionResult = "Something went wrong please try again later";
 			}
 			return RedirectToPage("/Index");
 		}
+	
 	}
 }

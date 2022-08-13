@@ -13,14 +13,14 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-	app.UseSwagger();
-	app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 
-	app.UseSwaggerUI(options =>
-	{
-		options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-		options.RoutePrefix = string.Empty;
-	});
+app.UseSwaggerUI(options =>
+{
+	options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+	options.RoutePrefix = string.Empty;
+});
 
 var recipesList = new List<Recipe>();
 var categoriesList = new List<string>();
@@ -76,7 +76,7 @@ app.MapPost("/recipes", ([FromBody] Recipe recipe) =>
 	return Results.Created($"/recipes/{recipe.Id}", recipe);
 });
 
-app.MapDelete("/recipes", (Guid id) =>
+app.MapDelete("/recipes/{id}", ([FromRoute(Name ="id")]Guid id) =>
 {
 	if (recipesList.Find(recipe => recipe.Id == id) is Recipe recipe)
 	{
@@ -91,6 +91,7 @@ app.MapPut("/recipes/{id}", ([FromBody]Recipe editedRecipe) =>
 {
 	if (recipesList.Find(recipe => recipe.Id == editedRecipe.Id) is Recipe recipe)
 	{
+		
 		recipesList.Remove(recipe);
 		recipesList.Add(editedRecipe);
 		recipesList = recipesList.OrderBy(o => o.Title).ToList();

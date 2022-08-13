@@ -15,12 +15,12 @@ namespace Recipe_Web_Interface.Pages.Recipes
 		public DeleteModel(IHttpClientFactory httpClientFactory) =>
 				_httpClientFactory = httpClientFactory;
 
-		public async Task<IActionResult> OnGet()
+		public async Task<IActionResult> OnGet(Guid recipeId)
 		{
 			try
 			{
 				var httpClient = _httpClientFactory.CreateClient("Api");
-				var response = await httpClient.GetFromJsonAsync<Recipe>($"{httpClient.BaseAddress.ToString()}recipes/{RecipeId}");
+				var response = await httpClient.GetFromJsonAsync<Recipe>($"{httpClient.BaseAddress.ToString()}recipes/{recipeId}");
 				if (response == null)
 					return NotFound();
 				Recipe = response;
@@ -33,12 +33,13 @@ namespace Recipe_Web_Interface.Pages.Recipes
 			}
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public async Task<IActionResult> OnPostAsync(Guid recipeId)
 		{
 			try
 			{
 				var httpClient = _httpClientFactory.CreateClient("Api");
-				var response = await httpClient.DeleteAsync($"recipes/{RecipeId}");
+				var response = await httpClient.DeleteAsync($"recipes/{recipeId}");
+				//var response = await httpClient.DeleteAsync("recipes?recipeId=" + recipeId);
 				response.EnsureSuccessStatusCode();
 				ActionResult = "Successfully Deleted";
 			}

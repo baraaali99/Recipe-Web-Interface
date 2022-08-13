@@ -4,36 +4,43 @@
 	ViewData["Title"] = "Create";
 }
 
-<div class="modal fade" id="addModalRecipe" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addModalLabel">Add New Recipe</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body c-edit-modal-body">
-                <form asp-page-handler="add" method="post" enctype="multipart/form-data" class="c-form">
+<h2 class="my-4">Add A New Recipe</h2>
 
-                    <div class="form-group">
-                        <label class="mb-2">Recipe Title</label>
-                        <input type="text" id="RecipeTitle" class="form-control" name="title" required />
-                        <label class="mb-2">Ingredients</label>
-                        <textarea class="form-control" type="text" id="RecipeIngredients" name="ingredients" required> </textarea>
-                        <label class="mb-2">Instructions</label>
-                        <textarea class="form-control" type="text" id="RecipeInstructions" name="instructions" required></textarea>
-                      @foreach (string category in @Model.Categories)
-			            {
-				            <input name="SelectedCategories" type="checkbox" value="@category" /> @category
-			            	<br />
-			            }          
-                    </div>
+<form method="post">
+	<div class="my-3 row">
+		<label asp-for="@Model.recipe.Title" class="col-2 col-form-label"></label>
+		<div class="col-3">
+			<input asp-for="@Model.Title" class="form-control" />
+		</div>
+		<span asp-validation-for="@Model.recipe.Title" class="text-danger"></span>
+	</div>
 
-                    <div class="modal-footer c-modal-footer">
-<button type="button" class="btn c-cancel-button" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        <button type="submit" class="btn c-confirm-button">Confirm</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+	<div class="my-3 row">
+		<label asp-for=@Model.recipe.Ingredients class="col-form-label col-2 "></label>
+		<div class="col-5">
+			<textarea class="form-control" asp-for=@Model.Ingredients rows="5" placeholder="enter every ingredient on a separate line"></textarea>
+		</div>
+	</div>
+
+	<div class="my-3 row">
+		<label asp-for=@Model.recipe.Instructions class="col-form-label col-2 "></label>
+		<div class="col-5">
+			<textarea class="form-control" asp-for=@Model.Instructions rows="5" placeholder="enter every instruction on a separate line"></textarea>
+		</div>
+	</div>
+
+	<div class="my-3 row">
+		<label asp-for=@Model.recipe.Categories class="col-form-label col-2 "></label>
+		<div class="col-10">
+			@foreach (string category in @Model.Categories)
+			{
+				<input name="SelectedCategories" type="checkbox" value="@category" /> @category
+				<br />
+			}
+		</div>
+	</div>
+	<div class="btn-group float-end">
+		<input type="submit" value="Create" class="btn btn-primary" />
+		<a class="btn btn-secondary" asp-page="Index">Back to List</a>
+	</div>
+</form>

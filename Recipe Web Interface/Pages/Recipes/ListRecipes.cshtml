@@ -18,33 +18,42 @@
 }
 
 
-<div class="container d-flex justify-content-between align-items-center my-4">
-	<h2>All Recipes</h2>
-	<a class="btn btn-primary h-25" asp-page="Create">Add a Recipe</a>
-</div>
+<div></div>
+<h1 class="text-center my-4" style="color:white">Recipes</h1>
+<div class="row justify-content-center g-4">
+    @foreach (var recipe in Model.RecipeList)
+    {
+        <div class="col">
+            <div class="card text-center">
 
-<div class="row row-cols-sm-1 row-cols-xl-2 g-4">
-	@foreach (var recipe in Model.RecipeList)
-	{
-		<div class="col">
-			<div class="card">
-				<div class="card-body">
+                <div class="card-footer">
+                    <div class="container">
+    <br />
+    <div class="row justify-content-center">
+        <div class="col-md">
+            <div class="card">
+                <div class="card-body">
+                    <div class="list-group">
+                        <div class="card-body text-dark list-group-item">
+                            <h4 class="card-title text-center">@recipe.Title</h4>
+                            <div class="text-center">
+                                @foreach (var category in @recipe.Categories)
+                                {
+                                    <span style="font-size:12px; margin-top:5px; margin-right: 5px;" class="badge rounded-pill bg-primary">@category</span>
+                                }
+                            </div>
 
-					<h5 class="card-title text-center">@recipe.Title</h5>
-
-					@foreach (var category in recipe.Categories)
-					{
-						<span class="badge bg-success mb-2">@category</span>
-					}
-
-					<div class="accordion">
-						<div class="accordion-item">
-							<h2 class="accordion-header">
-								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@("Ingredients"+recipe.Id)" aria-expanded="true" aria-controls=@("Ingredients"+recipe.Id)>
+                        </div>
+                        <div class="card-body text-dark list-group-item">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <h2 class="accordion-header">
+									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@("Ingredients"+recipe.Id)" aria-expanded="false" aria-controls=@("Ingredients"+recipe.Id)>
 									Ingredients
 								</button>
 							</h2>
-							<div id=@("Ingredients"+recipe.Id) class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+						<div id=@("Ingredients"+recipe.Id) class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
 								<div class="accordion-body">
 									<ul>
 										@foreach (var ingredient in recipe.Ingredients)
@@ -54,10 +63,9 @@
 									</ul>
 								</div>
 							</div>
-						</div>
-
-						<div class="accordion-item">
-							<h2 class="accordion-header">
+                                    </div>
+                                    <div class="col">
+                                        <h2 class="accordion-header">
 								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@("Instructions"+recipe.Id)" aria-expanded="false" aria-controls=@("Instructions"+recipe.Id)>
 									Instructions
 								</button>
@@ -72,10 +80,18 @@
 									</ul>
 								</div>
 							</div>
-						</div>
-
-					</div>
-					<div class="text-center mt-3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                 <div class="text-center mt-3">
 						<div class="btn-group">
 							<a class="btn btn-primary" asp-page="./Edit" asp-route-recipeId="@recipe.Id">
 								<i class="bi bi-pencil-square"></i>
@@ -86,8 +102,8 @@
 						</div>
 					</div>
 
-				</div>
-			</div>
-		</div>
-	}
+                </div>
+            </div>
+        </div>
+    }
 </div>
