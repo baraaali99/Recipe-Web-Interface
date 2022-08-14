@@ -54,6 +54,7 @@ using (StreamReader C = new StreamReader(jsonFileCategory))
 
 app.MapGet("/recipes", () =>
 {
+	recipesList = recipesList.OrderBy(o => o.Title).ToList();
 	return Results.Ok(recipesList);
 });
 
@@ -71,7 +72,9 @@ app.MapGet("/recipes/{id}", ([FromRoute(Name ="id")]Guid id) =>
 
 app.MapPost("/recipes", ([FromBody] Recipe recipe) =>
 {
+
 	recipesList.Add(recipe);
+	recipesList = recipesList.OrderBy(o => o.Title).ToList();
 	Save();
 	return Results.Created($"/recipes/{recipe.Id}", recipe);
 });

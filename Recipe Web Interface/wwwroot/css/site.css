@@ -17,3 +17,9 @@ body {
     margin-bottom: 60px;
     min-height: 100%;
 }
+.nav-link {
+    color:aliceblue;
+}
+li a{
+    color:aliceblue;
+}

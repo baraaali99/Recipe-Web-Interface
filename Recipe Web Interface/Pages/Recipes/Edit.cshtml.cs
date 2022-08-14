@@ -65,7 +65,9 @@ namespace Recipe_Web_Interface.Pages.Recipes
 
 			try
 			{
-				var response = await httpClient.PutAsJsonAsync($"recipes/{recipeId}", new Recipe {
+				string baseAddress = httpClient.BaseAddress.ToString();
+
+				var response = await httpClient.PutAsJsonAsync($"{baseAddress}recipes/{recipeId}", new Recipe {
 					Categories = Recipe.Categories , 
 					Id = Recipe.Id , 
 					Ingredients = Recipe.Ingredients , 

@@ -16,10 +16,21 @@
 		})
 	</script>
 }
-
-
-<div></div>
-<h1 class="text-center my-4" style="color:white">Recipes</h1>
+<style>
+    body{background-color:#d1d1d1;}
+</style>
+<div class="row">
+        <h1 class="col-10 c-font c-categories-header pt-5 ms-5">All Recipes</h1>
+        <div class="col pt-5">
+            <a class="btn c-Add-button" href="./CreateRecipe" >
+                Add new
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>
+            </a>
+        </div>
+</div>
 <div class="row justify-content-center g-4">
     @foreach (var recipe in Model.RecipeList)
     {
@@ -28,18 +39,18 @@
 
                 <div class="card-footer">
                     <div class="container">
-    <br />
+    <br/>
     <div class="row justify-content-center">
         <div class="col-md">
             <div class="card">
                 <div class="card-body">
                     <div class="list-group">
                         <div class="card-body text-dark list-group-item">
-                            <h4 class="card-title text-center">@recipe.Title</h4>
+                            <h4 class="card-title text-center" style="color:#3d0633;">@recipe.Title</h4>
                             <div class="text-center">
                                 @foreach (var category in @recipe.Categories)
                                 {
-                                    <span style="font-size:12px; margin-top:5px; margin-right: 5px;" class="badge rounded-pill bg-primary">@category</span>
+                                    <span style="font-size:12px; margin-top:5px; margin-right: 5px; background-color:#3d0633;" class="badge rounded-pill">@category</span>
                                 }
                             </div>
 
@@ -93,10 +104,10 @@
 </div>
                  <div class="text-center mt-3">
 						<div class="btn-group">
-							<a class="btn btn-primary" asp-page="./Edit" asp-route-recipeId="@recipe.Id">
+							<a class="btn" asp-page="./Edit" asp-route-recipeId="@recipe.Id">
 								<i class="bi bi-pencil-square"></i>
 							</a>
-							<a class="btn btn-danger" asp-page="./Delete" asp-route-recipeId="@recipe.Id">
+							<a class="btn" asp-page="./Delete" asp-route-recipeId="@recipe.Id">
 								<i class="bi bi-trash"></i>
 							</a>
 						</div>

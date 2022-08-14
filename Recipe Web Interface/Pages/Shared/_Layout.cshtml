@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - RazorWebInterface</title>
+	<title>@ViewData["Title"] - Your Favorite Recipe</title>
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/Theme.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/RazorWebInterface.styles.css" asp-append-version="true" />
@@ -12,49 +12,39 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Recipe_Web_Interface</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+        <div class="collapse" id="navbarToggleExternalContent">
+
+  <div class="bg-dark p-4">
+            
+     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+          
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-							<a class="nav-link" asp-area="" asp-page="Categories/CreateCategory">Create Categories</a>                            
-						</li>
-                        <li class="nav-item">
-                            <a class = "nav-link" asp-area="" asp-page="Recipes/CreateRecipe">Create Recipes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class = "nav-link" asp-area="" asp-page="Recipes/ListRecipes">List Recipes</a>
+                          <a class="navbar-brand" asp-area="" asp-page="/Index" style="color:white">Your Favorite Recipe</a>
+                            <a class = "nav-link" asp-area="" asp-page="Recipes/ListRecipes" style="color:white">Recipes</a>
                         </li>
                          <li class="nav-item">
-                            <a class = "nav-link" asp-area="" asp-page="Categories/ListCategories">List Categories</a>
+                            <a class = "nav-link" asp-area="" asp-page="Categories/ListCategories" style="color:white">Categories</a>
                         </li>
                     </ul>
                 </div>
-            </div>
-        </nav>
+  </div>
+</div>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+     
+    </button>
+  </div>
+</nav>
+        
     </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Recipe_Web_Interface - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
